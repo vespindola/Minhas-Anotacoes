@@ -24,8 +24,7 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferences.Editor editorText = sharedPreferences.edit();
                 editorText.putString("ANOTACAO", anotacao.getText().toString());
                 editorText.apply();
-                Snackbar.make(view, "Anotação salva!", Snackbar.LENGTH_LONG)
-                        .setAction("OK!", null).show();
+                Snackbar.make(view, "Anotação salva!", Snackbar.LENGTH_LONG).setAction("OK!", null).show();
             }
         });
         TextView texto = findViewById(R.id.textoAnotacao);
