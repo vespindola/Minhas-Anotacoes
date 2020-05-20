@@ -6,32 +6,41 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+
+    private AnotacaoPreferencias preferencias;
+    private EditText editAnotacao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        editAnotacao = findViewById(R.id.editAnotacao);
+
+        preferencias = new AnotacaoPreferencias(getApplicationContext());
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TextView anotacao = findViewById(R.id.textoAnotacao);
-                SharedPreferences sharedPreferences = getSharedPreferences("ANOTACOES", MODE_PRIVATE);
-                SharedPreferences.Editor editorText = sharedPreferences.edit();
-                editorText.putString("ANOTACAO", anotacao.getText().toString());
-                editorText.apply();
-                Snackbar.make(view, "Anotação salva!", Snackbar.LENGTH_LONG).setAction("OK!", null).show();
+
+                String textoRecuperado = editAnotacao.getText().toString();
+                if (textoRecuperado.equals("")){
+                    Snackbar.make(view, "Preencha a Anotação!", Snackbar.LENGTH_LONG).show();
+                }
+                else {
+                    preferencias.salvarAnotacao(textoRecuperado);
+                    Snackbar.make(view, "Anotação salva com sucesso!", Snackbar.LENGTH_LONG).show();
+                }
             }
         });
-        TextView texto = findViewById(R.id.textoAnotacao);
-        SharedPreferences sharedPreferences = getSharedPreferences("ANOTACOES", MODE_PRIVATE);
-        if (sharedPreferences.contains("ANOTACAO")) {
-            String anotacao = sharedPreferences.getString("ANOTACAO", "");
-            texto.setText(anotacao);
+        String anotacao = preferencias.recuperarAnotacao();
+        if (!anotacao.equals("")){
+            editAnotacao.setText(anotacao);
         }
     }
 
